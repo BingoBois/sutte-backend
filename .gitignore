@@ -1,3 +1,5 @@
 /node_modules/
 /dist/
 package-lock.json
+mysql_str.json
+mysqldetails.txt

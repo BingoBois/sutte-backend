@@ -1,0 +1,14 @@
+language: bash
+services: docker
+
+cache:
+  directories:
+      - node_modules
+
+env:
+  - MYSQL_STR = writer:secret85@les.viter.dk:3306/testdb
+
+script:
+- docker build -t lesbackstaging:latest .
+- docker run --rm --name my_mysql -v $(pwd)/mysqldump:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret85 -d mysql:latest
+- docker run -e MYSQL_STR=$MYSQL_STR --name tester lesbackstaging:latest npm test
