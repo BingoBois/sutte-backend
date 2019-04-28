@@ -10,6 +10,6 @@ const app = express()
 const port = 3001
 
 app.get('/', (req: Request, res: Response) => res.send('Hello World!'))
-app.get('/sut', (req: Request, res: Response) => res.send(process.env.SUT ? "SUT IS ACTIVATED" : "NON SUT MODE"))
+app.get('/sut', (req: Request, res: Response) => res.send(process.env.SUT ? "SUT IS ACTIVATED" : "NON SUT MODE"));
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
