@@ -6,9 +6,16 @@ cache:
       - node_modules
 
 env:
-  - MYSQL_STR = writer:secret85@les.viter.dk:3306/testdb
+  - MYSQL_STR = root:secret85@my_mysql:3306/testdb
 
 script:
+- docker network create mynet
+# Db setup
+- docker build -t ownmysql:latest -f Dockerfile.mysql .
+- docker run --network mynet --rm --name my_mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret85 -d ownmysql:latest
+- docker exec my_mysql mysql -u root --password="secret85" -e "CREATE DATABASE testdb;"
+- docker exec my_mysql mysql -u root --password="secret85" -e "use testdb; source /root/testdb.sql;"
+
+# Backend
 - docker build -t lesbackstaging:latest .
-- docker run --rm --name my_mysql -v $(pwd)/mysqldump:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret85 -d mysql:latest
-- docker run -e MYSQL_STR=$MYSQL_STR --name tester lesbackstaging:latest npm test
+- docker run --network mynet -e MYSQL_STR=$MYSQL_STR --name tester lesbackstaging:latest npm test
