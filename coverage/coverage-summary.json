@@ -1,0 +1,5 @@
+{"total": {"lines":{"total":27,"covered":0,"skipped":0,"pct":0},"statements":{"total":31,"covered":0,"skipped":0,"pct":0},"functions":{"total":10,"covered":0,"skipped":0,"pct":0},"branches":{"total":6,"covered":0,"skipped":0,"pct":0}}
+,"/mnt/c/Users/vikto/Desktop/testproject/sutte-backend/src/app.ts": {"lines":{"total":6,"covered":0,"skipped":0,"pct":0},"functions":{"total":3,"covered":0,"skipped":0,"pct":0},"statements":{"total":9,"covered":0,"skipped":0,"pct":0},"branches":{"total":2,"covered":0,"skipped":0,"pct":0}}
+,"/mnt/c/Users/vikto/Desktop/testproject/sutte-backend/src/db/suttedb.ts": {"lines":{"total":14,"covered":0,"skipped":0,"pct":0},"functions":{"total":5,"covered":0,"skipped":0,"pct":0},"statements":{"total":15,"covered":0,"skipped":0,"pct":0},"branches":{"total":4,"covered":0,"skipped":0,"pct":0}}
+,"/mnt/c/Users/vikto/Desktop/testproject/sutte-backend/src/routes/main.ts": {"lines":{"total":7,"covered":0,"skipped":0,"pct":0},"functions":{"total":2,"covered":0,"skipped":0,"pct":0},"statements":{"total":7,"covered":0,"skipped":0,"pct":0},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
+}

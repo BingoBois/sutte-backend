@@ -9,10 +9,16 @@
         "json",
         "node"
     ],
-    "testRegex": "(/__tests__/.*|(\\.|/))\\.ts$",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)",
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [
         "src/**/*.{ts,js}",
         "!src/**/*.d.ts"
-    ]
+    ],
+    "coverageReporters": [
+        "json-summary",
+        "text",
+        "lcov"
+      ],
+    "collectCoverage": true
 }

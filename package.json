@@ -6,7 +6,10 @@
   "scripts": {
     "start": "tsc && node ./dist/app.js",
     "dev": "tsc && nodemon ./dist/app.js",
-    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand --config jest.config.json"
+    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand --config jest.config.json",
+    "coverage": "tsc && jest --detectOpenHandles --forceExit --runInBand --config jest.config.json --coverage",
+    "make-badges": "node_modules/.bin/jest-badges-readme",
+    "make-readme": "npm run coverage && npm run make-badges"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,7 @@
     "mysql": "^2.17.1"
   },
   "devDependencies": {
+    "@olavoparno/jest-badges-readme": "^1.3.4",
     "@types/jest": "23.3.2",
     "jest": "23.6.0",
     "nodemon": "^1.18.10",
