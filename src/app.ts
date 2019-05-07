@@ -1,15 +1,15 @@
 import bodyParser from "body-parser";
 import mainRouter from './routes/main';
+import authRouter from './routes/auth';
 import { Request, Response } from "express";
-/*
-app.use(bodyParser.json());
-app.use("/api", mainRouter);
-*/
+
 const express = require('express')
 const app = express()
 const port = 3000
 
-app.get('/', (req: Request, res: Response) => res.send('Hello World!'))
-app.get('/sut', (req: Request, res: Response) => res.send(process.env.SUT ? "SUT IS ACTIVATED" : "NON SUT MODE"));
+app.use(bodyParser.json());
+
+app.use('/', mainRouter);
+app.use('/auth', authRouter);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
