@@ -8,16 +8,19 @@ afterAll(() => {
 
 describe('Database Integration Tests', () => {
   
+
   test('Create Account', async () => {
     const result = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85');
     expect(result).toBe(true);
-
-    // Double create account
-    expect(async () => {
-      const result2 = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85');
-    }).toThrowError();
-
   });
+
+  test('Create Account 2', async () => {
+    try{
+      const result2 = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85');
+    }catch (err){
+      expect(err.code).toBe("ER_DUP_ENTRY");
+    }
+  })
 
   test('Select Account', async () => {
     // Gets account, first from email, secondly from id.
@@ -27,20 +30,24 @@ describe('Database Integration Tests', () => {
     expect(result1).toEqual(result2);
 
     // Select nonexisting account error
-    expect(async () => {
+    try{
       const result3 = await dbHandler.getAccount(undefined, 'denstyggemail@bingo.dk');
-    }).toThrowError();
+    } catch(err){
+      expect(err).toBeNull
+    }
   });
 
   test('Delete Account', async () => {
-    // Delete account
-    const result = await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
-    expect(result).toBe(true);
-
-    // Delete nonexisting account
-    expect(async () => {
       const result = await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
-    }).toThrowError();
+      expect(result).toBe(true)
   });
+
+  test('Delete nonexisting account', async () => {
+    try{
+      const result = await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
+    }catch(err){
+      expect(err).toBe("No user to delete")
+    }
+  })
 
 });

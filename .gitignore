@@ -5,3 +5,4 @@ mysql_str.json
 mysqldetails.txt
 coverage
 env.env
+./testLocal.sh
