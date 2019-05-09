@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 const router = express.Router()
 
 router.get('/', (req: Request, res: Response) => {
-  res.send('Ya boi');
+    res.json({message: "Ya boi"});
 });
 
 export default router;
