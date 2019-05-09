@@ -28,7 +28,6 @@
     "mysql": "^2.17.1"
   },
   "devDependencies": {
-    "sutte-types": "git+ssh://git@github.com:BingoBois/sutte-types.git",
     "@olavoparno/jest-badges-readme": "^1.3.4",
     "@types/bcrypt": "3.0.0",
     "@types/jest": "23.3.2",
