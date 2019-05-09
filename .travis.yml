@@ -2,7 +2,7 @@ language: bash
 services: docker
 
 env:
-  - MYSQL_ADR=127.0.0.1 MYSQL_USER=root MYSQL_PASS=secret85 MYSQL_DB=testdb
+  - MYSQL_ADR=my_mysql MYSQL_USER=root MYSQL_PASS=secret85 MYSQL_DB=testdb
 
 script:
 - docker network create mynet
