@@ -2,44 +2,39 @@ import express, { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
 
 // MAKE ENV VARIABLE
-const key = "djghhhhuuwiwuewieuwieuriwu";
-const router = express.Router()
+const key = process.env.JWT_KEY || "AltidEnKeyDetAltidEnSikkerVinder85";
+const router = express.Router();
 
 router.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(req.path);
-  if (req.path !== '/login') {
-    const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : "";
-    if (!token) {
-      res.json({ err: "No Token" });
-    }
-    else {
-      jwt.verify(token, key, (err, payload) => {
-        // Make sure payload and token aren't empty
-        if (err) {
-          res.json(err);
-        }
-        if (payload) {
-          next();
-        }
-      });
-    }
+  if (req.path === '/login') {
+    return next();
   }
-  else{
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.json({ err: "No Token" });
+  }
+  jwt.verify(token, key, (err) => {
+    // Make sure payload and token aren't empty
+    if (err) {
+      return res.json(err);
+    }
     next();
-  }
+  });
 });
 
 router.post('/login', async (req: Request, res: Response) => {
-  console.log(req.body);
   const { email, password } = req.body;
-  console.log(email);
-  if (email && password){
-    const token = await jwt.sign({}, key);
-    res.json(token);
+  if (!email || !password){
+    return res.json({ err: "Missing email and/or password"});
   }
-  else{
-    res.json({ err: "Missing email and/or password"});
-  }
+  const token = await jwt.sign({userEmail: email}, key);
+  res.json(token);
+});
+
+router.get('/viktokim', (req, res) => {
+    res.json({
+        message: "Welcome Token User"
+    });
 });
 
 export default router;
