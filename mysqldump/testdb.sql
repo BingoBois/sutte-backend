@@ -18,8 +18,8 @@ CREATE TABLE `account` (
 -- ----------------------------
 -- Records of account
 -- ----------------------------
-INSERT INTO `account` VALUES ('1', 'kongen@bingo.dk', '$2b$04$dghnllFHs/O44T8.XZvRHeoDdusT77WJcp/793wj8k29JqzjMZAa6', 'admin', 'Mester Mestersen');
-INSERT INTO `account` VALUES ('2', 'soren@fattig.dk', '$2b$04$dghnllFHs/O44T8.XZvRHeoDdusT77WJcp/793wj8k29JqzjMZAa6', 'teacher', 'Soldirch S Uttesen');
+INSERT INTO `account` VALUES ('1', 'kongen@bingo.dk', '75165bf1070522fa6e7c3ea79090809118448e8a96775f28c5612384d82214d9', 'admin', 'Mester Mestersen');
+INSERT INTO `account` VALUES ('2', 'soren@fattig.dk', '75165bf1070522fa6e7c3ea79090809118448e8a96775f28c5612384d82214d9', 'teacher', 'Soldirch S Uttesen');
 
 -- ----------------------------
 -- Table structure for course

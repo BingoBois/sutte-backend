@@ -1,6 +1,6 @@
 import mysql, { Connection } from 'mysql';
-import bcrypt from 'bcrypt';
-import { IAccount } from '../types';
+import { IAccount, ICourse } from '../types';
+import { hashPass } from '../helpers/hash';
 
 class DbHandler {
 
@@ -17,56 +17,88 @@ class DbHandler {
     this.connection.connect();
   }
 
-  public async createAccount(email: string, pass: string, role: 'admin' | 'teacher', name: string): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      const hashedPass = await bcrypt.hash(pass, 2);
+  public createAccount(email: string, pass: string, role: 'admin' | 'teacher', name: string): Promise<boolean> {
+    const hashedPass = hashPass(pass);
+    return new Promise((resolve, reject) => {
       this.connection.query('INSERT INTO account (email, pass, role, name) VALUES (?, ?, ?, ?);',
-        [email, hashedPass, role, name], async (err) => {
-          if (err){
-            reject(err);
-          } 
+        [email, hashedPass, role, name], (err) => {
+          if (err) {
+            return reject(err);
+          }
           resolve(true);
         });
-    })
+    });
   }
 
-  public async getAccount(id?: number, email?: string): Promise<IAccount> {
+  public getAccount(search: number | string): Promise<IAccount> {
     return new Promise(async (resolve, reject) => {
-      if (!id && !email) reject('No id or email in getAccount');
-      const valArr = id ? [id] : [email];
-      const condInput = id ? 'WHERE id = ?;' : 'WHERE email = ?;';
-      this.connection.query('SELECT * FROM account ' + condInput,
-       valArr, async (err, result) => {
-          if (err) reject(err);
-          const newRes = Object.assign({}, result[0]);
-          resolve({
-            id: newRes.id,
-            email: newRes.email,
-            pass: newRes.pass,
-            name: newRes.name,
-            role: newRes.role
-          });
+      if (!search) {
+        return reject('No id or email in getAccount');
+      }
+      const condInput = typeof (search) === "number" ? 'WHERE id = ?;' : 'WHERE email = ?;';
+      this.connection.query(`SELECT * FROM account ${condInput}`, [search], async (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        if (result.length <= 0) {
+          return reject(`Account not found`);
+        }
+        resolve({
+          id: result[0].id,
+          email: result[0].email,
+          pass: result[0].pass,
+          name: result[0].name,
+          role: result[0].role
         });
-    })
+      });
+    });
   }
 
-  public async deleteAccount(id?: number, email?: string): Promise<any> {
+  public deleteAccount(id?: number, email?: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
       if (!id && !email) reject('No id or email in deleteAccount');
       const valArr = id ? [id] : [email];
       const condInput = id ? 'WHERE id = ?;' : 'WHERE email = ?;';
       this.connection.query('DELETE FROM account ' + condInput,
-       valArr, async (err, result) => {
-          if (err) reject(err);
-          if(result.affectedRows < 1) reject("No user to delete")
+        valArr, async (err, result) => {
+          if (err) {
+            return reject(err);
+          }
+          if (result.affectedRows < 1) {
+            return reject("No user to delete");
+          }
           resolve(true);
         });
-    })
+    });
+  }
+
+  public getCourses(search?: number | string, fuzzy: boolean = true): Promise<Array<ICourse>> {
+    return new Promise(async (resolve, reject) => {
+        const fuzzyName = 'WHERE name ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
+        const fuzzyDesc = 'description ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
+      const condInput = (search ? typeof (search) === "number" ? 'WHERE id = ?;' : `${fuzzyName} OR ${fuzzyDesc};` : ';' );
+      console.log(`SELECT * FROM course ${condInput}`);
+      this.connection.query(`SELECT * FROM course ${condInput}`, [search, search], async (err, result: Array<ICourse>) => {
+        if (err) {
+            console.log(err);
+          return reject(err);
+        }
+        if (result.length <= 0) {
+          return reject(`Courses not found`);
+        }
+        const courseArray: Array<ICourse> = [];
+        result.forEach((course) => {
+            courseArray.push(course);
+        });
+        resolve(courseArray);
+      });
+    });
   }
 
   public closeCon(): void {
     this.connection.destroy();
   }
+
 }
 
 export default DbHandler;

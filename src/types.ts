@@ -2,7 +2,7 @@ export interface IAccount {
   id: number,
   email: string,
   pass: string,
-  role: string,
+  role: "admin" | "teacher",
   name: string
 }
 

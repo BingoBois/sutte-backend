@@ -23,14 +23,14 @@ describe('Database Integration Tests | No Data Required', () => {
 
   test('Select Account', async () => {
     // Gets account, first from email, secondly from id.
-    const result1 = await dbHandler.getAccount(undefined, 'forsaftig@gmail.hot');
-    const result2 = await dbHandler.getAccount(result1.id, undefined);
+    const result1 = await dbHandler.getAccount('forsaftig@gmail.hot');
+    const result2 = await dbHandler.getAccount(result1.id);
     // Check that we get the same account back
     expect(result1).toEqual(result2);
 
     // Select nonexisting account error
     try{
-      const result3 = await dbHandler.getAccount(undefined, 'denstyggemail@bingo.dk');
+      const result3 = await dbHandler.getAccount('denstyggemail@bingo.dk');
     } catch(err){
       expect(err).toBeNull
     }
