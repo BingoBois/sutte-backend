@@ -14,13 +14,4 @@ router.get('/courses', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/course', async (req: Request, res: Response) => {
-    try {
-        const courses = await new DbHandler().testCourse();
-        res.json(courses);
-    } catch (err) {
-        res.json(err);
-    }
-});
-
 export default router;
