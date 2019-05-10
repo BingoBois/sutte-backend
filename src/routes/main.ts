@@ -14,4 +14,21 @@ router.get('/courses', async (req: Request, res: Response) => {
     }
 });
 
+router.post('/suggestcourse', async (req: Request, res: Response) => {
+    let {name, description, active, fk_suggestedBy} = req.body 
+
+    if(!name || name.isEmpty){
+        return res.json({message: "Missing Course Name!"})
+    } else if (!active && active !== false) {
+       active = false
+    } 
+    try{
+        const suggestCourse = await new DbHandler().createCourse(name, description, active, fk_suggestedBy)
+        res.json({message: 'Course send'})
+    } catch (err){
+        res.json(err)
+    }
+    
+})
+
 export default router;

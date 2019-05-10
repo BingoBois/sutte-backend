@@ -30,12 +30,12 @@ CREATE TABLE `course` (
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `active` tinyint(255) NOT NULL,
-  `fk_suggstedBy` int(11) DEFAULT NULL,
+  `fk_suggestedBy` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_index` (`name`) USING BTREE,
   UNIQUE KEY `id_index` (`id`) USING BTREE,
-  KEY `fk_suggestedBy` (`fk_suggstedBy`),
-  CONSTRAINT `fk_suggestedBy` FOREIGN KEY (`fk_suggstedBy`) REFERENCES `account` (`id`)
+  KEY `fk_suggestedBy` (`fk_suggestedBy`),
+  CONSTRAINT `fk_suggestedBy` FOREIGN KEY (`fk_suggestedBy`) REFERENCES `account` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
 
 -- ----------------------------

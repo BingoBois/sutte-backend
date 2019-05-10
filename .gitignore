@@ -4,5 +4,5 @@ package-lock.json
 mysql_str.json
 mysqldetails.txt
 coverage
-env.env
+.env
 ./testLocal.sh

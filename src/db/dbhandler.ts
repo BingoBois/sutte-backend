@@ -1,6 +1,8 @@
 import mysql, { Connection } from 'mysql';
 import { IAccount, ICourse } from '../types';
 import { hashPass } from '../helpers/hash';
+import { rejects } from 'assert';
+import { resolve } from 'dns';
 
 class DbHandler {
 
@@ -78,7 +80,7 @@ class DbHandler {
         const fuzzyDesc = 'description ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
       const condInput = (search ? typeof (search) === "number" ? 'WHERE id = ?;' : `${fuzzyName} OR ${fuzzyDesc};` : ';' );
       console.log(`SELECT * FROM course ${condInput}`);
-      this.connection.query(`SELECT * FROM course ${condInput}`, [search, search], async (err, result: Array<ICourse>) => {
+      this.connection.query(`SELECT * FROM course ${condInput}`, [search, search], (err, result: Array<ICourse>) => {
         if (err) {
             console.log(err);
           return reject(err);
@@ -93,6 +95,21 @@ class DbHandler {
         resolve(courseArray);
       });
     });
+  }
+
+  public createCourse(name:string,description:string, active:boolean, fk_suggestedBy:number){
+    return new Promise( async (resolve, reject) => {
+    this.connection.query(`INSERT INTO course (name, description, active, fk_suggestedBy) VALUES (?, ?, ?, ?);`, 
+    [name, description, active, fk_suggestedBy], (err) => {
+      if (err) {
+        console.log(err);
+        return reject(err)
+      } 
+      resolve(true) 
+    })
+  })
+    
+
   }
 
   public closeCon(): void {
