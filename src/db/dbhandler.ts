@@ -56,6 +56,8 @@ class DbHandler {
     });
   }
 
+//public getAccounts
+
   public deleteAccount(id?: number, email?: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
       if (!id && !email) reject('No id or email in deleteAccount');
@@ -108,8 +110,20 @@ class DbHandler {
       resolve(true) 
     })
   })
-    
+  }
 
+  public deleteCourse(courseID: number){
+    return new Promise (async (resolve, reject) => {
+      this.connection.query(`DELETE FROM course WHERE id=${courseID}`, async (err,result) => {
+        if (err) {
+          return reject(err);
+        }
+        if (result.affectedRows < 1) {
+          return reject(`No course with id ${courseID} to delete`);
+        }
+        resolve(result);
+      })
+    })
   }
 
   public closeCon(): void {

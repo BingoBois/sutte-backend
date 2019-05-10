@@ -31,4 +31,19 @@ router.post('/suggestcourse', async (req: Request, res: Response) => {
     
 })
 
+router.delete("/deletecourse", async(req: Request, res: Response) => {
+    let {courseID} = req.body
+
+    if(courseID === null || courseID === ""){
+        return res.json({message: "Missing CourseID!"})
+    } 
+
+    try{
+        const deleteCourse = await new DbHandler().deleteCourse(courseID)
+        res.json({message: `Course id ${courseID} deleted!`})
+    } catch (err){
+        res.json(err)
+    }
+})
+
 export default router;
