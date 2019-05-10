@@ -6,17 +6,16 @@ afterAll(() => {
   dbHandler.closeCon();
 });
 
-describe('Database Integration Tests', () => {
+describe('Database Integration Tests | No Data Required', () => {
   
-
   test('Create Account', async () => {
-    const result = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85');
+    const result = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85', 'admin', 'Bygge Peter');
     expect(result).toBe(true);
   });
 
   test('Create Account 2', async () => {
     try{
-      const result2 = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85');
+      const result2 = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85', 'admin', 'Bygge Peter');
     }catch (err){
       expect(err.code).toBe("ER_DUP_ENTRY");
     }
@@ -50,4 +49,11 @@ describe('Database Integration Tests', () => {
     }
   })
 
+});
+
+
+describe('Database Integration Tests | With Premade Data', () => {
+  test('Jaja', () => {
+    expect(true).toBe(true);
+  });
 });

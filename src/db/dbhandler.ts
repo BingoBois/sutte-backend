@@ -17,11 +17,11 @@ class DbHandler {
     this.connection.connect();
   }
 
-  public async createAccount(email: string, password: string): Promise<boolean> {
+  public async createAccount(email: string, pass: string, role: 'admin' | 'teacher', name: string): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
-      const hashedPass = await bcrypt.hash(password, 2);
-      this.connection.query('INSERT INTO account (email, pass) VALUES (?, ?);',
-        [email, hashedPass], async (err) => {
+      const hashedPass = await bcrypt.hash(pass, 2);
+      this.connection.query('INSERT INTO account (email, pass, role, name) VALUES (?, ?, ?, ?);',
+        [email, hashedPass, role, name], async (err) => {
           if (err){
             reject(err);
           } 
@@ -42,7 +42,9 @@ class DbHandler {
           resolve({
             id: newRes.id,
             email: newRes.email,
-            pass: newRes.pass
+            pass: newRes.pass,
+            name: newRes.name,
+            role: newRes.role
           });
         });
     })
