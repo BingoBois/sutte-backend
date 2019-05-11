@@ -15,35 +15,35 @@ router.get('/courses', async (req: Request, res: Response) => {
 });
 
 router.post('/suggestcourse', async (req: Request, res: Response) => {
-    let {name, description, active, fk_suggestedBy} = req.body 
-
-    if(!name || name.isEmpty){
-        return res.json({message: "Missing Course Name!"})
+    let { name, description, active, fk_suggestedBy } = req.body;
+    if (!name || name === "") {
+        return res.json({err: "Missing Course Name!"});
     } else if (!active && active !== false) {
-       active = false
-    } 
-    try{
-        const suggestCourse = await new DbHandler().createCourse(name, description, active, fk_suggestedBy)
-        res.json({message: 'Course send'})
-    } catch (err){
-        res.json(err)
+       active = false;
     }
-    
-})
+    try {
+        await new DbHandler().createCourse(name, description, active, fk_suggestedBy);
+        res.json({
+            message: 'Course successfully added'
+        });
+    } catch (err) {
+        res.json(err);
+    }
+});
 
 router.delete("/deletecourse", async(req: Request, res: Response) => {
-    let {courseID} = req.body
-
-    if(courseID === null || courseID === ""){
-        return res.json({message: "Missing CourseID!"})
-    } 
-
-    try{
-        const deleteCourse = await new DbHandler().deleteCourse(courseID)
-        res.json({message: `Course id ${courseID} deleted!`})
-    } catch (err){
-        res.json(err)
+    let { courseID } = req.body;
+    if (!courseID || courseID === "") {
+        return res.json({
+            err: "Missing CourseID!"
+        });
     }
-})
+    try{
+        await new DbHandler().deleteCourse(courseID);
+        res.json({message: `Course id ${courseID} deleted`});
+    } catch (err) {
+        res.json(err);
+    }
+});
 
 export default router;

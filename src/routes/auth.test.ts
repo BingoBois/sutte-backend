@@ -1,10 +1,6 @@
 import supertest from 'supertest';
 import app, { close } from '../app';
 
-beforeAll(() => {
-    // Start server
-});
-
 afterAll(() => {
     close();
 });

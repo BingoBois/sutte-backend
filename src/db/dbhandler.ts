@@ -56,7 +56,7 @@ class DbHandler {
     });
   }
 
-//public getAccounts
+  //public getAccounts
 
   public deleteAccount(id?: number, email?: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
@@ -78,13 +78,13 @@ class DbHandler {
 
   public getCourses(search?: number | string, fuzzy: boolean = true): Promise<Array<ICourse>> {
     return new Promise(async (resolve, reject) => {
-        const fuzzyName = 'WHERE name ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
-        const fuzzyDesc = 'description ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
-      const condInput = (search ? typeof (search) === "number" ? 'WHERE id = ?;' : `${fuzzyName} OR ${fuzzyDesc};` : ';' );
+      const fuzzyName = 'WHERE name ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
+      const fuzzyDesc = 'description ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
+      const condInput = (search ? typeof (search) === "number" ? 'WHERE id = ?;' : `${fuzzyName} OR ${fuzzyDesc};` : ';');
       console.log(`SELECT * FROM course ${condInput}`);
       this.connection.query(`SELECT * FROM course ${condInput}`, [search, search], (err, result: Array<ICourse>) => {
         if (err) {
-            console.log(err);
+          console.log(err);
           return reject(err);
         }
         if (result.length <= 0) {
@@ -92,38 +92,38 @@ class DbHandler {
         }
         const courseArray: Array<ICourse> = [];
         result.forEach((course) => {
-            courseArray.push(course);
+          courseArray.push(course);
         });
         resolve(courseArray);
       });
     });
   }
 
-  public createCourse(name:string,description:string, active:boolean, fk_suggestedBy:number){
-    return new Promise( async (resolve, reject) => {
-    this.connection.query(`INSERT INTO course (name, description, active, fk_suggestedBy) VALUES (?, ?, ?, ?);`, 
-    [name, description, active, fk_suggestedBy], (err) => {
-      if (err) {
-        console.log(err);
-        return reject(err)
-      } 
-      resolve(true) 
-    })
-  })
+  public createCourse(name: string, description: string, active: boolean, fk_suggestedBy: number) {
+    return new Promise(async (resolve, reject) => {
+      this.connection.query(`INSERT INTO course (name, description, active, fk_suggestedBy) VALUES (?, ?, ?, ?);`,
+        [name, description, active, fk_suggestedBy], (err) => {
+          if (err) {
+            console.log(err);
+            return reject(err)
+          }
+          resolve()
+        });
+    });
   }
 
-  public deleteCourse(courseID: number){
-    return new Promise (async (resolve, reject) => {
-      this.connection.query(`DELETE FROM course WHERE id=${courseID}`, async (err,result) => {
+  public deleteCourse(courseID: number) {
+    return new Promise(async (resolve, reject) => {
+      this.connection.query(`DELETE FROM course WHERE id = ?`, async (err, result) => {
         if (err) {
           return reject(err);
         }
-        if (result.affectedRows < 1) {
+        if (result.affectedRows <= 0) {
           return reject(`No course with id ${courseID} to delete`);
         }
-        resolve(result);
-      })
-    })
+        resolve();
+      });
+    });
   }
 
   public closeCon(): void {
