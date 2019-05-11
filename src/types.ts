@@ -18,5 +18,6 @@ export interface ICourse {
   name: string;
   description: string;
   active: boolean;
-  fk_suggestedBy: number;
+  fk_suggestedBy: number | undefined;
+  amountSignups: number;
 }
