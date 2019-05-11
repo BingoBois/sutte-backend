@@ -17,7 +17,7 @@ class DbHandler {
     this.connection.connect();
   }
 
-  public createAccount(email: string, pass: string, role: 'admin' | 'teacher', name: string): Promise<boolean> {
+  public createAccount(email: string, pass: string, role: 'admin' | 'teacher' | 'student', name: string): Promise<boolean> {
     const hashedPass = hashPass(pass);
     return new Promise((resolve, reject) => {
       this.connection.query('INSERT INTO account (email, pass, role, name) VALUES (?, ?, ?, ?);',
