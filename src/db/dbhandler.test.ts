@@ -1,59 +1,77 @@
 import DbHandler from './dbhandler';
+import { closeServer } from '../app';
 
-const dbHandler = new DbHandler();
+let dbHandler = new DbHandler();
 
-afterAll(() => {
-  dbHandler.closeCon();
+afterAll((done) => {
+    dbHandler.closeCon(() => {
+        closeServer(async () => {
+            await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
+            done();
+        });
+   });
 });
+
+let selectAccountID: number;
 
 describe('Database Integration Tests | No Data Required', () => {
-  
-  test('Create Account', async () => {
-    const result = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85', 'admin', 'Bygge Peter');
-    expect(result).toBe(true);
-  });
 
-  test('Create Account 2', async () => {
-    try{
-      const result2 = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85', 'admin', 'Bygge Peter');
-    }catch (err){
-      expect(err.code).toBe("ER_DUP_ENTRY");
-    }
-  })
+    test('Create Account', async (done) => {
+        const result = await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85', 'admin', 'Bygge Peter');
+        expect(result).toBe(true);
+        done();
+    });
 
-  test('Select Account', async () => {
-    // Gets account, first from email, secondly from id.
-    const result1 = await dbHandler.getAccount('forsaftig@gmail.hot');
-    const result2 = await dbHandler.getAccount(result1.id);
-    // Check that we get the same account back
-    expect(result1).toEqual(result2);
+    test('Create Account 2', async () => {
+        try {
+            await dbHandler.createAccount('forsaftig@gmail.hot', 'styg85', 'admin', 'Bygge Peter');
+        } catch (err) {
+            expect(err.code).toBe("ER_DUP_ENTRY");
+        }
+    })
 
-    // Select nonexisting account error
-    try{
-      const result3 = await dbHandler.getAccount('denstyggemail@bingo.dk');
-    } catch(err){
-      expect(err).toBeNull
-    }
-  });
+    test('Select non-working account', async (done) => {
+        try {
+            await dbHandler.getAccount('denstyggemail@bingo.dk');
+            done();
+        } catch (err) {
+            expect(err).toBe("Account not found");
+            done();
+        }
+    });
 
-  test('Delete Account', async () => {
-      const result = await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
-      expect(result).toBe(true)
-  });
+    test('Select working account by email', async () => {
+        const email = 'forsaftig@gmail.hot';
+        const result = await dbHandler.getAccount(email);
+        expect(result.email).toBe(email);
+        selectAccountID = result.id;
+    });
 
-  test('Delete nonexisting account', async () => {
-    try{
-      const result = await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
-    }catch(err){
-      expect(err).toBe("No user to delete")
-    }
-  })
+    test('Select Account', async () => {
+        // Gets account, first from email, secondly from id.
+        const email = 'forsaftig@gmail.hot';
+        const result = await dbHandler.getAccount(selectAccountID);
+        // Check that we get the same account back
+        expect(result.email).toEqual(email);
+    });
+
+    test('Delete Account', async () => {
+        const result = await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
+        expect(result).toBe(true)
+    });
+
+    test('Delete nonexisting account', async () => {
+        try {
+            await dbHandler.deleteAccount(undefined, 'forsaftig@gmail.hot');
+        } catch (err) {
+            expect(err).toBe("No user to delete")
+        }
+    })
 
 });
 
-
 describe('Database Integration Tests | With Premade Data', () => {
-  test('Jaja', () => {
-    expect(true).toBe(true);
-  });
+    test('Jaja', () => {
+        expect(true).toBe(true);
+    });
 });

@@ -1,8 +1,6 @@
 import mysql, { Connection } from 'mysql';
 import { IAccount, ICourse } from '../types';
 import { hashPass } from '../helpers/hash';
-import { rejects } from 'assert';
-import { resolve } from 'dns';
 
 class DbHandler {
 
@@ -45,18 +43,17 @@ class DbHandler {
         if (result.length <= 0) {
           return reject(`Account not found`);
         }
-        resolve({
-          id: result[0].id,
-          email: result[0].email,
-          pass: result[0].pass,
-          name: result[0].name,
-          role: result[0].role
-        });
+        const obj = {
+            id: result[0].id,
+            email: result[0].email,
+            pass: result[0].pass,
+            name: result[0].name,
+            role: result[0].role
+          } as IAccount;
+        resolve(obj);
       });
     });
   }
-
-  //public getAccounts
 
   public deleteAccount(id?: number, email?: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
@@ -81,10 +78,8 @@ class DbHandler {
       const fuzzyName = 'WHERE name ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
       const fuzzyDesc = 'description ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
       const condInput = (search ? typeof (search) === "number" ? 'WHERE id = ?;' : `${fuzzyName} OR ${fuzzyDesc};` : ';');
-      console.log(`SELECT * FROM course ${condInput}`);
       this.connection.query(`SELECT * FROM course ${condInput}`, [search, search], (err, result: Array<ICourse>) => {
         if (err) {
-          console.log(err);
           return reject(err);
         }
         if (result.length <= 0) {
@@ -104,7 +99,6 @@ class DbHandler {
       this.connection.query(`INSERT INTO course (name, description, active, fk_suggestedBy) VALUES (?, ?, ?, ?);`,
         [name, description, active, fk_suggestedBy], (err) => {
           if (err) {
-            console.log(err);
             return reject(err)
           }
           resolve()
@@ -126,8 +120,15 @@ class DbHandler {
     });
   }
 
-  public closeCon(): void {
-    this.connection.destroy();
+  public closeCon(callback?: () => void): void {
+    this.connection.end((err) => {
+      if (err) {
+        console.log(err);
+      }
+      if (callback) {
+        callback();
+      }
+    });
   }
 
 }

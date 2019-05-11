@@ -43,8 +43,24 @@ router.post('/register', async (req: Request, res: Response) => {
   } catch (err) {
     return res.json({ err });
   }
-  const token = await jwt.sign({ userEmail: body.email }, JWT_KEY);
-  res.json(token);
+  res.json({
+      message: "Successfully created your account"
+  });
 });
+
+router.post('/checktoken', (req, res) => {
+    const { token } = req.body;
+    try {
+        jwt.verify(token, JWT_KEY);
+        res.json({
+            message: "Token is valid"
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({
+            err: "Token is invalid"
+        });
+    }
+})
 
 export default router;

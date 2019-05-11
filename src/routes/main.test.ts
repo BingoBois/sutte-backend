@@ -1,9 +1,15 @@
 import supertest from 'supertest';
-import app, { close } from '../app';
+import app, { closeServer, openServer } from '../app';
 import { signToken } from '../helpers/hash';
 
-afterAll(() => {
-    close();
+beforeAll((done) => {
+    closeServer(() => {
+        openServer(done);
+    });
+})
+
+afterAll((done) => {
+    closeServer(done);
 });
 
 describe('Testing main router paths', () => {

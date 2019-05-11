@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsc && node ./dist/app.js",
     "dev": "tsc && nodemon ./dist/app.js",
-    "test": "tsc && jest --runInBand --config jest.config.json",
+    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand --config jest.config.json",
     "coverage": "tsc && jest --detectOpenHandles --forceExit --runInBand --config jest.config.json --coverage",
     "make-badges": "node_modules/.bin/jest-badges-readme",
     "make-readme": "npm run coverage && npm run make-badges"

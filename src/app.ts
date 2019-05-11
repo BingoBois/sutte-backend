@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 
 import express, { Request, Response } from 'express';
 import { NextFunction } from "connect";
+import { Server } from "http";
 
 const app = express();
 const port = 3000;
@@ -17,7 +18,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.path.includes('/login')) {
     return next();
   }
-  console.log(`Attempting token authorization`);
   const token = req.headers.authorization;
   if (!token) {
     return res.json({ err: "No Token" });
@@ -27,7 +27,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     if (err) {
       return res.json(err);
     }
-    console.log(`Provided token is valid`);
     next();
   });
 });
@@ -35,11 +34,26 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/', mainRouter);
 app.use('/auth', authRouter);
 
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+let server: Server;
 
-export function close(callback?: () => void) {
-  server.close(callback);
+export function closeServer(callback?: () => void) {
+  server.close((err) => {
+    if (callback) {
+        callback();
+    }
+  });
 }
+
+export function openServer(callback?: () => void) {
+    server = app.listen(port, () => {
+        // console.log(`Server is running at port: ${port}`);
+        if (callback) {
+            callback();
+        }
+    });
+}
+
+openServer();
 
 export const JWT_KEY = process.env.JWT_KEY || "AltidEnKeyDetAltidEnSikkerVinder85";
 export default app;
