@@ -108,7 +108,7 @@ class DbHandler {
 
   public deleteCourse(courseID: number) {
     return new Promise(async (resolve, reject) => {
-      this.connection.query(`DELETE FROM course WHERE id = ?`, async (err, result) => {
+      this.connection.query(`DELETE FROM course WHERE id = ?`, [courseID], async (err, result) => {
         if (err) {
           return reject(err);
         }

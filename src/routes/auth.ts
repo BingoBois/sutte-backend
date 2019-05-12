@@ -40,12 +40,12 @@ router.post('/register', async (req: Request, res: Response) => {
   }
   try {
     new DbHandler().createAccount(body.email, body.pass, body.role, body.name);
+    res.json({
+        message: "Successfully created your account"
+    });
   } catch (err) {
     return res.json({ err });
   }
-  res.json({
-      message: "Successfully created your account"
-  });
 });
 
 router.post('/checktoken', (req, res) => {
