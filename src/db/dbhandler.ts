@@ -78,7 +78,7 @@ class DbHandler {
       const fuzzyName = 'WHERE name ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
       const fuzzyDesc = 'description ' + (fuzzy ? 'LIKE CONCAT("%", ?,  "%")' : '= ?');
       const condInput = (search ? typeof (search) === "number" ? 'WHERE id = ?;' : `${fuzzyName} OR ${fuzzyDesc};` : ';');
-      this.connection.query(`SELECT * , (SELECT COUNT(*) FROM signup WHERE fk_course = course.id) as amountSignups FROM course ${condInput}`, [search, search], (err, result: Array<ICourse>) => {
+      this.connection.query(`SELECT *, (SELECT COUNT(*) FROM signup WHERE fk_course = course.id) as amountSignups FROM course ${condInput}`, [search, search], (err, result: Array<ICourse>) => {
         if (err) {
           return reject(err);
         }
@@ -87,8 +87,6 @@ class DbHandler {
         }
         const courseArray: Array<ICourse> = [];
         result.forEach((course) => {
-          course.amountSignups = 
-
           courseArray.push(course);
         });
         resolve(courseArray);

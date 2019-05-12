@@ -41,7 +41,8 @@ describe('JWT Token Tests', () => {
         expect(result.body.length).toBeGreaterThan(20);
         token = result.body;
     });
-    test('Can use created JWT Token', async () => {
+    // Repeated Test, runs 3 times
+    test.each([[], [], []])('Can use created JWT Token', async () => {
         const tokenHeader = {"authorization": token};
         const body = {
             token

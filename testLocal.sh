@@ -10,5 +10,5 @@ docker run --network mynet --rm --name my_mysql -p 3306:3306 -e MYSQL_ROOT_PASSW
 sleep 10
 docker exec my_mysql mysql -u root --password=secret85 -e "CREATE DATABASE testdb;"
 docker exec my_mysql mysql -u root --password=secret85 -e "use testdb; source /root/testdb.sql;"
-npm test -- dbhandler
+npm test -- auth
 docker stop my_mysql
