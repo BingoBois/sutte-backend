@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  if (req.path.includes('/login')) {
+  if (req.path.includes('/login') || req.path.includes('/register')) {
     return next();
   }
   const token = req.headers.authorization;
